@@ -11,7 +11,7 @@
 <a name="english-version"></a>
 # 🛡️ TLI-Mobile-Mac-Bridge (English) (TITrack Mobile Integration)
 
-This project provides a seamless bridge to sync **Torchlight: Infinite** game logs from an Android device (Phone/Tablet) to a PC or Mac, enabling real-time loot analysis using **TITrack**.
+This project provides a seamless bridge to sync **Torchlight: Infinite** game logs from an Android device (Phone/Tablet) to a  Mac, enabling real-time loot analysis using **TITrack**.
 
 ---
 
