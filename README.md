@@ -107,7 +107,7 @@ Open **two separate** terminal windows.
 ---
 
 ## Step 9: Final Configuration
-1.  Open your browser and go to: `http://localhost:8000`
+1.  Open your browser and go to: `http://127.0.0.1:8000`
 2.  Go to **Settings**.
 3.  Set **Game Directory** to your desktop data folder:
     * **Mac:** `/Users/YourUsername/Desktop/TLI_Data`
