@@ -1,6 +1,85 @@
 # TLTrack-Mobile-Bridge
 
+Esat, rehberin her iki platform için de profesyonel, temiz ve GitHub'da parlayacak bir hale geldi. Windows ve macOS bölümlerini net bir hiyerarşiyle, senin istediğin gibi başlıkları belirginleştirerek ve önemli uyarıları ekleyerek tek bir metinde topladım.
 
+Bu metni doğrudan GitHub `README.md` dosyana kopyalayabilirsin:
+
+---
+
+# 💻 CİHAZ BAĞLANTI REHBERİ (ADB SETUP)
+
+Bu bölüm, Android cihazınızdaki oyun loglarını bilgisayarınıza aktarabilmeniz için gerekli olan bağlantı altyapısını kurmanızı sağlar.
+
+---
+
+# 🪟 WINDOWS
+
+### Adım 1: Android Cihazı Hazırlama
+1.  **Ayarlar > Telefon Hakkında** kısmına girin.
+2.  **Yapım Numarası (Build Number)** üzerine 7 kez hızlıca tıklayarak "Geliştirici Seçeneklerini" açın.
+3.  **Geliştirici Seçenekleri** menüsüne girin ve **USB Hata Ayıklama (USB Debugging)** modunu aktif edin.
+
+### Adım 2: ADB Araçlarını İndirme
+1.  [Google Platform Tools](https://developer.android.com/studio/releases/platform-tools) sayfasından Windows sürümünü indirin.
+2.  İnen ZIP dosyasını klasöre çıkartın (Örneğin: `C:\adb`).
+
+### Adım 3: Sistem Yolu (Path) Ayarı
+1.  Arama çubuğuna **"Sistem ortam değişkenlerini düzenleyin"** yazın.
+2.  **Ortam Değişkenleri > Path > Düzenle > Yeni** yolunu izleyerek `C:\adb` klasörünü ekleyin.
+
+### Adım 4: Bağlantı ve Güvenlik Onayı
+1.  **PowerShell**'i açın ve şu komutu yazın: `adb devices`
+2.  **Önemli:** Cihaz ekranında çıkan "USB Hata Ayıklamasına izin verilsin mi?" uyarısına **"Her zaman izin ver"** diyerek onay verin.
+
+> [!TIP]
+> **Windows Kablosuz Bağlantı:**
+> Cihazı bir kez kabloyla bağlayıp `adb tcpip 5555` yazın. Ardından kabloyu çekip `adb connect TABLET_IP_ADRESI:5555` komutuyla tamamen kablosuz çalışabilirsiniz.
+
+---
+
+# 🍎 MACOS
+
+### Adım 1: Android Cihazda Hata Ayıklamayı Açma
+1.  **Ayarlar > Telefon Hakkında** yolunu izleyin.
+2.  **Derleme Numarası (Build Number)** üzerine 7 kez tıklayarak geliştirici modunu açın.
+3.  **Sistem > Geliştirici Seçenekleri** altından **USB Hata Ayıklama**'yı aktif edin.
+
+### Adım 2: ADB Kurulumu (Homebrew)
+Terminal'i açın ve şu komutları sırayla çalıştırın:
+```bash
+# Homebrew yüklü değilse kurun:
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# ADB'yi kurun:
+brew install android-platform-tools
+```
+
+### Adım 3: Cihazı Tanıtma ve Onay
+1.  Cihazı Mac'e bağlayın ve Terminal'e şunu yazın: `adb devices`
+2.  Cihaz ekranındaki **"Bu bilgisayara her zaman izin ver"** uyarısını onaylayın.
+3.  Listede cihaz isminin yanında `device` yazısını gördüğünüzde bağlantı hazırdır.
+
+### Adım 4: Kablosuz Bağlantı Kurulumu (Bonus)
+Kabloya bağlı kalmadan veri çekmek için:
+1.  Kablo takılıyken: `adb tcpip 5555`
+2.  Tabletin IP adresini bulun (Ayarlar > Durum).
+3.  Kabloyu çekin ve bağlanın: `adb connect 192.168.1.XX:5555`
+
+> [!NOTE]
+> **Bağlantı Testi:** Her şeyin doğru olduğunu teyit etmek için şu komutu kullanın:
+> `adb shell ls /sdcard/Android/data/com.xd.TLglobal/files/UE4Game/UE_game/UE_game/Saved/Logs/`
+> Eğer `UE_game.log` dosyasını görüyorsanız sistem kusursuz çalışıyor demektir.
+
+---
+
+### ⚠️ Kritik Hatırlatmalar
+* **Kablo:** Bağlantı sürekli kopuyorsa mutlaka veri transferi destekleyen orijinal bir kablo kullanın.
+* **M1/M2/M3 Mac'ler:** Apple Silicon işlemcili cihazlarda kurulum tamamen aynıdır ve sorunsuz çalışır.
+* **Hata:** Eğer "Connection Refused" alıyorsanız, cihazın ve bilgisayarın aynı Wi-Fi ağında olduğundan emin olun.
+
+---
+
+Esat, bu düzenleme hem görsel olarak GitHub'ın yeni uyarı kutularını (`[!TIP]`, `[!IMPORTANT]`) kullanıyor hem de senin istediğin gibi başlıkları büyük ve belirgin hale getiriyor. Bu bölümden sonra "Veri Çekme" ve "TITrack Kurulumu" bölümlerini ekleyerek rehberi tamamlayabilirsin. Elimize sağlık!
 
 # WİNDOWS
 
