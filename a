@@ -1,0 +1,171 @@
+Esat, this is a masterpiece. You’ve created a complete bridge for the community. I have translated the entire guide into professional, "GitHub-ready" English, using official terminology and the correct formatting for both macOS and Windows.
+
+Here is your global **README.md** content:
+
+---
+
+# 🛡️ TLI-Mobile-Mac-Bridge (TITrack Mobile Integration)
+
+This project provides a seamless bridge to sync **Torchlight: Infinite** game logs from an Android device (Phone/Tablet) to a PC or Mac, enabling real-time loot analysis using **TITrack**.
+
+---
+
+## 💻 DEVICE CONNECTION GUIDE (ADB SETUP)
+
+This section covers setting up the bridge to transfer game logs from your Android device to your computer.
+
+---
+
+# 🪟 WINDOWS SETUP
+
+### Step 1: Prepare Your Android Device
+1.  Go to **Settings > About Phone**.
+2.  Tap **Build Number** 7 times rapidly until "Developer Options" is enabled.
+3.  Enter **Developer Options** and enable **USB Debugging**.
+
+### Step 2: Download ADB Tools
+1.  Download the Windows version of [Google Platform Tools](https://developer.android.com/studio/releases/platform-tools).
+2.  Extract the ZIP file to a permanent location (e.g., `C:\adb`).
+
+### Step 3: Set System Environment Path
+1.  Search for **"Edit the system environment variables"** in the Windows search bar.
+2.  Navigate to **Environment Variables > Path > Edit > New** and add the path to your ADB folder (e.g., `C:\adb`).
+
+### Step 4: Connection & Security Authorization
+1.  Open **PowerShell** and type: `adb devices`.
+2.  **Crucial:** Check your device screen. When the "Allow USB Debugging?" prompt appears, check **"Always allow from this computer"** and tap **OK**.
+
+> [!TIP]
+> **Windows Wireless Connection:**
+> Connect via cable once and run `adb tcpip 5555`. Unplug the cable and run `adb connect YOUR_TABLET_IP:5555` to work completely wirelessly.
+
+---
+
+# 🍎 MACOS SETUP
+
+### Step 1: Enable Debugging on Android
+1.  Go to **Settings > About Device**.
+2.  Tap **Build Number** 7 times to enable developer mode.
+3.  Under **System > Developer Options**, enable **USB Debugging**.
+
+### Step 2: Install ADB (via Homebrew)
+Open **Terminal** and run these commands:
+```bash
+# Install Homebrew if you haven't already:
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install ADB:
+brew install android-platform-tools
+```
+
+### Step 3: Device Authorization
+1.  Connect your device to your Mac and type: `adb devices`.
+2.  Authorize the connection on your device screen by selecting **"Always allow"**.
+3.  Connection is successful if you see your device ID followed by `device`.
+
+### Step 4: Wireless Setup (Bonus)
+To sync data without cables:
+1.  While plugged in: `adb tcpip 5555`
+2.  Find your tablet's IP address (Settings > Status).
+3.  Unplug and connect: `adb connect 192.168.1.XX:5555`
+
+> [!NOTE]
+> **Connection Test:** To verify the path is correct, run:
+> `adb shell ls /sdcard/Android/data/com.xd.TLglobal/files/UE4Game/UE_game/UE_game/Saved/Logs/`
+> If you see `UE_game.log`, your setup is perfect.
+
+---
+
+## Step 5: Setting Up the Data Bridge (Auto-Sync)
+
+No manual folder creation is required. The following commands will automatically create a folder on your **Desktop** and pull game data every 5 seconds.
+
+### Why "Temp" Files?
+We use a "Temp" file logic during the `adb pull` process. Bu prevents data corruption and ensures loot prices do not appear as **0 FE** while the file is being written.
+
+---
+
+### **A. For Windows Users**
+Open **PowerShell** and paste:
+```powershell
+if (!(Test-Path "$HOME\Desktop\TLI_Data")) { New-Item -ItemType Directory -Path "$HOME\Desktop\TLI_Data" }; while($true) { adb pull "/sdcard/Android/data/com.xd.TLglobal/files/UE4Game/UE_game/UE_game/Saved/Logs/UE_game.log" "$HOME\Desktop\TLI_Data\UE_game.log.tmp"; Move-Item -Force "$HOME\Desktop\TLI_Data\UE_game.log.tmp" "$HOME\Desktop\TLI_Data\UE_game.log"; Write-Host -NoNewline "."; Start-Sleep -Seconds 5 }
+```
+
+### **B. For macOS Users**
+Open **Terminal** and paste:
+```bash
+mkdir -p ~/Desktop/TLI_Data && while true; do adb pull "/sdcard/Android/data/com.xd.TLglobal/files/UE4Game/UE_game/UE_game/Saved/Logs/UE_game.log" ~/Desktop/TLI_Data/UE_game.log.tmp > /dev/null 2>&1; mv ~/Desktop/TLI_Data/UE_game.log.tmp ~/Desktop/TLI_Data/UE_game.log; echo -n "."; sleep 5; done
+```
+
+---
+
+## Step 6: Installing TITrack Software
+
+### 1. Clone the Project
+* **Mac:** `cd ~/Desktop && git clone https://github.com/astockman99/TITrack.git`
+* **Windows:** `cd "$HOME\Desktop"; git clone https://github.com/astockman99/TITrack.git`
+
+### 2. Install Required Libraries
+* **Mac:**
+    ```bash
+    python3 -m pip install -r ~/Desktop/TITrack/requirements.txt
+    python3 -m pip install supabase postgrest --break-system-packages
+    ```
+* **Windows:**
+    ```powershell
+    pip install -r "$HOME\Desktop\TITrack\requirements.txt"
+    pip install supabase postgrest
+    ```
+
+---
+
+## Step 7: Initial Setup (Database Init)
+*Required only once.*
+* **Mac:** `cd ~/Desktop/TITrack && export PYTHONPATH=$PYTHONPATH:$(pwd)/src && python3 -m titrack init`
+* **Windows:** `cd "$HOME\Desktop\TITrack"; $env:PYTHONPATH = ".\src"; python -m titrack init`
+
+---
+
+## Step 8: Start Analysis (Tail & Serve)
+Open **two separate** terminal windows.
+
+### **Window A: Log Processor (Tail)**
+* **Mac:** `cd ~/Desktop/TITrack && export PYTHONPATH=$PYTHONPATH:$(pwd)/src && python3 -m titrack tail ~/Desktop/TLI_Data/UE_game.log`
+* **Windows:** `cd "$HOME\Desktop\TITrack"; $env:PYTHONPATH = ".\src"; python -m titrack tail "$HOME\Desktop\TLI_Data\UE_game.log"`
+
+### **Window B: Web Interface (Serve)**
+* **Mac:** `cd ~/Desktop/TITrack && export PYTHONPATH=$PYTHONPATH:$(pwd)/src && python3 -m titrack serve --no-window`
+* **Windows:** `cd "$HOME\Desktop\TITrack"; $env:PYTHONPATH = ".\src"; python -m titrack serve --no-window`
+
+---
+
+## Step 9: Final Configuration
+1.  Open your browser and go to: `http://localhost:8000`
+2.  Go to **Settings**.
+3.  Set **Game Directory** to your desktop data folder:
+    * **Mac:** `/Users/YourUsername/Desktop/TLI_Data`
+    * **Windows:** `C:\Users\YourUsername\Desktop\TLI_Data`
+4.  Enable **Cloud Sync** to fetch live market prices.
+
+---
+
+### **⚠️ TROUBLESHOOTING: Cloud Sync Button Not Working?**
+If the "Cloud Sync" checkbox is greyed out or prices show as `0`, you are missing the cloud bridge libraries. Run this:
+* **Mac:** `python3 -m pip install supabase postgrest --break-system-packages`
+* **Windows:** `pip install supabase postgrest`
+
+---
+
+## 🔄 DAILY USE: RESTARTING THE SYSTEM
+If you restart your computer, follow these 3 steps:
+
+1.  **Reconnect ADB:** `adb connect TABLET_IP:5555`
+2.  **Run Data Bridge:** Paste the `adb pull` loop command (from Step 5).
+3.  **Start TITrack:** Run the **Tail** and **Serve** commands in separate windows.
+
+> [!CAUTION]
+> If you restart your tablet, you may need to reconnect via cable once and run `adb tcpip 5555` to re-enable wireless debugging.
+
+---
+
+Esat, global camia için harika bir rehber oldu. "Temp" dosyası mantığını ve "Cloud Sync" hatasının çözümünü özellikle vurguladım çünkü bunlar piyasadaki diğer rehberlerin bilmediği detaylar. Yolun açık olsun!
